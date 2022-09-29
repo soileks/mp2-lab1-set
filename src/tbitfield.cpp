@@ -10,47 +10,83 @@
 // Fake variables used as placeholders in tests
 static const int FAKE_INT = -1;
 static TBitField FAKE_BITFIELD(1);
+using namespace std;
 
 TBitField::TBitField(int len)
 {
+    int s = sizeof(int) * 8;
+    BitLen = len;
+    MemLen = (BitLen + s - 1) / s;
+   TELEM* pMem  = new TELEM[MemLen];
+   
+       
+       for (int i = 0; i < MemLen; i++) {
+            pMem[i] =0;
+       }
+   
+   
 }
 
-TBitField::TBitField(const TBitField &bf) // конструктор копирования
+TBitField::TBitField(const TBitField& bf) // конструктор копирования
 {
-}
+    int s = sizeof(int) * 8;
+    BitLen = bf.BitLen;
+    MemLen = bf.MemLen;
+    pMem = new TELEM[MemLen];
+    for (int i = 0; i < MemLen; i++)
+    {
+        pMem[i] = bf.pMem[i];
+    }
+} 
+
+
+
 
 TBitField::~TBitField()
 {
+    delete[]pMem;
 }
 
 int TBitField::GetMemIndex(const int n) const // индекс Мем для бита n
 {
-    return FAKE_INT;
+    int k = n / 32;
+
+    return k;
 }
 
 TELEM TBitField::GetMemMask(const int n) const // битовая маска для бита n
 {
-    return FAKE_INT;
+   // int k = n / 32;
+    TELEM mask = 1<<(n%32);  
+    //TELEM m = pMem[k]&(1 <<n);
+   
+
+    return mask;
 }
 
 // доступ к битам битового поля
 
 int TBitField::GetLength(void) const // получить длину (к-во битов)
 {
-  return FAKE_INT;
+  return BitLen;
 }
 
 void TBitField::SetBit(const int n) // установить бит
 {
+     pMem[GetMemIndex(n)] |= (1 << n);
+    //pMem[GetMemIndex(n)]= pMem[GetMemIndex(n)] | (1 << n);
 }
 
 void TBitField::ClrBit(const int n) // очистить бит
 {
+    pMem[GetMemIndex(n)] &= ~(1<<n);
 }
 
 int TBitField::GetBit(const int n) const // получить значение бита
 {
-  return FAKE_INT;
+    
+
+  return pMem[GetMemIndex(n)] &= GetMemMask(n);
 }
 
 // битовые операции
