@@ -93,21 +93,54 @@ int TBitField::GetBit(const int n) const // получить значение б
 
 TBitField& TBitField::operator=(const TBitField &bf) // присваивание
 {
-    return FAKE_BITFIELD;
+    if (this != &bf) {
+        delete[] pMem;
+        BitLen = bf.BitLen;
+        MemLen = bf.MemLen;
+        pMem = new TELEM[MemLen];
+        for (int i = 0; i < MemLen; i++)
+        {
+            pMem[i] = bf.pMem[i];
+        }
+        return *this;
+    }
+    return *this;
 }
 
 int TBitField::operator==(const TBitField &bf) const // сравнение
 {
-  return FAKE_INT;
+    if (BitLen!=bf.BitLen) {
+        return false;
+    }
+    
+   else if (MemLen != bf.MemLen) { return false; }
+    for (int i = 0; i < MemLen; i++) {
+        if (pMem[i] != bf.pMem[i])
+            return false;
+    }
+  return true;
 }
 
 int TBitField::operator!=(const TBitField &bf) const // сравнение
 {
-  return FAKE_INT;
+    if (BitLen != bf.BitLen) {
+        return true;
+    }
+
+    else if (MemLen != bf.MemLen) { return true; }
+    for (int i = 0; i < MemLen; i++) {
+        if (pMem[i] != bf.pMem[i])
+            return true;
+    }
+  return false;
 }
 
 TBitField TBitField::operator|(const TBitField &bf) // операция "или"
 {
+   // 0011
+    //1010
+   // 1011
+
     return FAKE_BITFIELD;
 }
 
@@ -118,7 +151,15 @@ TBitField TBitField::operator&(const TBitField &bf) // операция "и"
 
 TBitField TBitField::operator~(void) // отрицание
 {
-    return FAKE_BITFIELD;
+    for (int i = 0; i < BitLen; i++) {
+        if (this->GetBit(i)==1) {
+            ClrBit(i);
+        }
+        else {
+            SetBit(i);
+        }
+    }
+    return *this;
 }
 
 // ввод/вывод
