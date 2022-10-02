@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\user\mp2-lab1-set\samples\sample_prime_numbers.cpp">
+    <ClCompile Include="C:\Users\User\Desktop\mp2-lab1-set\samples\sample_prime_numbers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\user\mp2-lab1-set\samples\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\User\Desktop\mp2-lab1-set\samples\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{A2A16DC8-9E67-33C4-B79A-11A4C19D9E09}</UniqueIdentifier>
+      <UniqueIdentifier>{8E48280B-E3C9-309C-B401-7F3C5FC711B7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
