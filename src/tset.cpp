@@ -20,7 +20,7 @@ TSet::TSet(int mp) : BitField(mp)
 }
 
 // конструктор копирования
-TSet::TSet(const TSet &s) : BitField(s.MaxPower)
+TSet::TSet(const TSet &s) : BitField(s.BitField)
 {
     MaxPower = s.MaxPower;
 }
@@ -32,8 +32,9 @@ TSet::TSet(const TBitField &bf) : MaxPower ( bf.GetLength()), BitField(bf){}
 
 TSet::operator TBitField()
 {
-    TBitField tmp(BitField);
-    return tmp;
+    /*TBitField tmp(BitField);
+    return tmp;*/
+    return BitField;
 }
 
 int TSet::GetMaxPower(void) const // получить макс. к-во эл-тов
@@ -50,13 +51,13 @@ int  TSet::IsMember(const int Elem) const // элемент множества?
 
 void TSet::InsElem(const int Elem) // включение элемента множества
 {
-    if ((Elem > MaxPower) || (Elem < 0)) throw std::out_of_range("elem is out of universe");
+   // if ((Elem > MaxPower) || (Elem < 0)) throw std::out_of_range("elem is out of universe");
     BitField.SetBit(Elem);
 }
 
 void TSet::DelElem(const int Elem) // исключение элемента множества
 {
-    if ((Elem > MaxPower)||(Elem<0)) throw std::out_of_range("elem is out of universe");
+    //if ((Elem > MaxPower)||(Elem<0)) throw std::out_of_range("elem is out of universe");
     BitField.ClrBit(Elem);
 }
 
@@ -64,52 +65,69 @@ void TSet::DelElem(const int Elem) // исключение элемента мн
 
 TSet& TSet::operator=(const TSet &s) // присваивание
 {
-    MaxPower = s.MaxPower;
-    BitField=s.BitField;
+    if (!(*this == s)) {
+        MaxPower = s.MaxPower;
+        BitField = s.BitField;
+        return *this;
+    }
     return *this;
 }
 
 int TSet::operator==(const TSet &s) const // сравнение
 {
-    return FAKE_INT;
+    return BitField == s.BitField;
 }
 
 int TSet::operator!=(const TSet &s) const // сравнение
 {
-    return FAKE_INT;
+    return !(*this == s);
 }
 
 TSet TSet::operator+(const TSet &s) // объединение
 {
-    if (MaxPower != s.MaxPower) throw std::length_error("TSet objects have different size");
+    TSet tField(std::max(MaxPower, s.MaxPower));
+    tField.BitField = BitField | s.BitField;
+    return tField;
+    /*if (MaxPower != s.MaxPower) throw std::length_error("TSet objects have different size");
     TSet tmp(BitField | s.BitField);
-    return tmp;
+    return tmp;*/
 }
 
 TSet TSet::operator+(const int Elem) // объединение с элементом
 {
-    TSet tmp(BitField);
+    TSet tField(*this);
+    tField.BitField.SetBit(Elem);
+    return tField;
+
+    /*TSet tmp(BitField);
     tmp.InsElem(Elem);
-    return tmp;
+    return tmp;*/
 }
 
 TSet TSet::operator-(const int Elem) // разность с элементом
 {
-    TSet tmp(BitField);
+    TSet tField(*this);
+    tField.BitField.ClrBit(Elem);
+    return tField;
+
+
+    /*TSet tmp(BitField);
     tmp.DelElem(Elem);
-    return tmp;
+    return tmp;*/
 }
 
 TSet TSet::operator*(const TSet &s) // пересечение
 {
-    if (MaxPower != s.MaxPower) throw std::length_error("TSet objects have different size");
-    TSet tmp(BitField & s.BitField);
-    return tmp;
+    TSet res(BitField & s.BitField);
+    return res;
+
 }
 
 TSet TSet::operator~(void) // дополнение
 {
-    return FAKE_SET;
+    TSet tmp(MaxPower);
+    tmp.BitField = ~BitField;
+    return tmp;
 }
 
 // перегрузка ввода/вывода
@@ -121,5 +139,8 @@ istream &operator>>(istream &istr, TSet &s) // ввод
 
 ostream& operator<<(ostream &ostr, const TSet &s) // вывод
 {
+   
+    
+
     return ostr;
 }
